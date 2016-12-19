@@ -8,6 +8,7 @@ StandardOutput=journal
 Restart=on-failure
 User={{ vault_user }}
 Group={{ vault_group }}
+ExecReload=/bin/kill -HUP $MAINPID
 
 [Install]
 WantedBy=multi-user.target
