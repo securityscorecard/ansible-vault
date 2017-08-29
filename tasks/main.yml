@@ -64,7 +64,7 @@
   become: yes
   get_url:
     url: "{{ vault_url }}"
-    dest: "{{ vault_download_dir }}/vault.zip"
+    dest: "{{ vault_download_dir }}/vault_{{ vault_version }}.zip"
     sha256sum: "{{ vault_sha256sum }}"
   tags:
     - vault
@@ -87,7 +87,7 @@
 - name: Unzip Vault to installation directory
   become: yes
   unarchive:
-    src: "{{ vault_download_dir }}/vault.zip"
+    src: "{{ vault_download_dir }}/vault_{{ vault_version }}.zip"
     dest: "{{ vault_install_dir }}"
     creates: "{{ vault_install_dir }}/vault"
     copy: no
