@@ -10,3 +10,4 @@ vault_log_file: /var/log/vault.log
 vault_user: vault
 vault_group: vault
 vault_service_name: vault
+vault_ui: False
