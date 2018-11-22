@@ -1,18 +1,15 @@
 ---
 # tasks file for vault
 
-- name: Include distribution specific variables
-  include_vars: "{{ ansible_distribution }}.yml"
-  tags:
-    - vault
-
-- include: CentOS.yml
-  when: ansible_distribution == "CentOS"
-  tags:
-    - vault
-
-- include: Ubuntu.yml
-  when: ansible_distribution == "Ubuntu"
+- name: Install required packages
+  become: yes
+  apt:
+    name: "{{ item }}"
+    update_cache: yes
+    state: latest
+  items:
+    - libcap2-bin
+    - zip
   tags:
     - vault
 
@@ -53,7 +50,7 @@
     - vault
 
 - name: Get list of installed Vault files
-  shell: ls -1 {{ vault_install_dir }}/vault*
+  shell: ls -1 {{ vault_install_dir }}/vault
   register: vault_files
   when: not installed_vault_version | skipped
   changed_when: false
@@ -113,23 +110,8 @@
     owner: root
     group: root
     mode: 0644
-  when: ansible_distribution_release|lower == 'xenial'
   notify:
     - reload systemd
-    - restart vault
-  tags:
-    - vault
-
-- name: Create Vault upstart configuration
-  become: yes
-  template:
-    src: vault.conf.j2
-    dest: /etc/init/vault.conf
-    owner: root
-    group: root
-    mode: 0644
-  when: ansible_distribution_release|lower == 'trusty'
-  notify:
     - restart vault
   tags:
     - vault
